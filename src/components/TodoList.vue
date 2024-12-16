@@ -1,15 +1,15 @@
 <template>
   <div>
     <ul>
-      <li 
-        v-for="todo in todos" 
-        :key="todo.id" 
-        :class="{ completed: todo.completed }"
+      <li
+          v-for="todo in todos"
+          :key="todo.id"
+          :class="{ completed: todo.completed }"
       >
-        <input 
-          type="checkbox" 
-          :checked="todo.completed" 
-          @change="$emit('toggle-complete', todo.id)" 
+        <input
+            type="checkbox"
+            :checked="todo.completed"
+            @change="$emit('toggle-complete', todo.id)"
         />
         {{ todo.text }}
         <button @click="$emit('delete-todo', todo.id)">Delete</button>

@@ -2,10 +2,10 @@
   <div id="app" class="todo-app">
     <h1>Todo App</h1>
     <TodoInput @add-todo="addTodo" />
-    <TodoList 
-      :todos="todos" 
-      @delete-todo="deleteTodo" 
-      @toggle-complete="toggleComplete" 
+    <TodoList
+        :todos="todos"
+        @delete-todo="deleteTodo"
+        @toggle-complete="toggleComplete"
     />
     <p>Total tasks: {{ todos.length }}</p>
     <p>Remaining tasks: {{ remainingTasks }}</p>
@@ -13,36 +13,45 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue';
 import TodoInput from './components/TodoInput.vue';
 import TodoList from './components/TodoList.vue';
 
 export default {
   components: { TodoInput, TodoList },
-  data() {
-    return {
-      todos: [],
-    };
-  },
-  computed: {
-    remainingTasks() {
-      return this.todos.filter(todo => !todo.completed).length;
-    },
-  },
-  methods: {
-    addTodo(newTodo) {
-      this.todos.push({
+  setup() {
+    const todos = ref([]);
+
+    const addTodo = (newTodo) => {
+      todos.value.push({
         id: Date.now(),
         text: newTodo,
         completed: false,
       });
-    },
-    deleteTodo(todoId) {
-      this.todos = this.todos.filter(todo => todo.id !== todoId);
-    },
-    toggleComplete(todoId) {
-      const todo = this.todos.find(todo => todo.id === todoId);
-      if (todo) todo.completed = !todo.completed;
-    },
+    };
+
+    const deleteTodo = (todoId) => {
+      todos.value = todos.value.filter(todo => todo.id !== todoId);
+    };
+
+    const toggleComplete = (todoId) => {
+      const todo = todos.value.find(todo => todo.id === todoId);
+      if (todo) {
+        todo.completed = !todo.completed;
+      }
+    };
+
+    const remainingTasks = computed(() => {
+      return todos.value.filter(todo => !todo.completed).length;
+    });
+
+    return {
+      todos,
+      addTodo,
+      deleteTodo,
+      toggleComplete,
+      remainingTasks,
+    };
   },
 };
 </script>
